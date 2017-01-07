@@ -103,7 +103,6 @@ public class SnapToGridEditor : Editor
 
         if (isMouseDown && m_rotationKeyPressed)
         {
-            Debug.Log("entered here");
             LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
             m_rotationKeyPressed = false;
         }

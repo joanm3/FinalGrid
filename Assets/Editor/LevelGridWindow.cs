@@ -32,6 +32,17 @@ public class LevelGridWindow : EditorWindow
         //m_levelGrid.hideUnityHandles = EditorGUILayout.Toggle("Hide Unity Handles:", m_levelGrid.hideUnityHandles);
         //EditorGUILayout.PrefixLabel("Snap to Grid:");
         EditorGUILayout.Space();
+
+        if(LevelGrid.Ins == null)
+        {
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Add LevelGrid"))
+            {
+                LevelGridEditor.AddLevelGrid(); 
+            }
+            return; 
+        }
+
         EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(20f)); 
         m_levelGrid.snapToGrid = EditorGUILayout.Toggle( m_levelGrid.snapToGrid);
         EditorGUILayout.LabelField("Snap to grid");
