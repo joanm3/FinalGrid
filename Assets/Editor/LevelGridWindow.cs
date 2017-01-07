@@ -40,7 +40,7 @@ public class LevelGridWindow : EditorWindow
         EditorGUILayout.PrefixLabel("Grid Pow:");
         m_levelGrid.gridSize = (LevelGrid.Pow2)EditorGUILayout.EnumPopup(m_levelGrid.gridSize);
         EditorGUILayout.PrefixLabel("Height Change Pow:");
-        m_levelGrid.heightGridSize = (LevelGrid.Pow2)EditorGUILayout.EnumPopup(m_levelGrid.gridSize);
+        m_levelGrid.heightGridSize = (LevelGrid.Pow2)EditorGUILayout.EnumPopup(m_levelGrid.heightGridSize);
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
