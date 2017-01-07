@@ -22,7 +22,7 @@ public class LevelGrid : MonoBehaviour
     [HideInInspector]
     public GameObject selectedGameObject;
     public bool showVerticalGrid;
-    public bool showGrid = true; 
+    public bool showGrid = true;
 
 
 
@@ -31,7 +31,7 @@ public class LevelGrid : MonoBehaviour
     public float sizeRows = 10;
     public BoxCollider boxCollider;
     [Tooltip("null if no parent wanted")]
-    public Transform parentGameObject; 
+    public Transform parentGameObject;
 
     private readonly Color _normalColor = Color.grey;
     private readonly Color _selectedColor = Color.yellow;
@@ -244,18 +244,19 @@ public class LevelGrid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Color oldColor = Gizmos.color;
-        Gizmos.color = _normalColor;
 
-        if ((float)gridSize == 0 || !showGrid)
+        if ((float)gridSize == 0)
             return;
 
-        GridGizmo(sizeColums, sizeRows, height);
         Gizmos.color = _selectedColor;
-        //Function not yet integrated. to do later. 
-        // VerticalGridGizmo(Selection.activeGameObject.transform.position, 8, false);
         GridFrameGizmo(sizeColums, sizeRows, height);
-        Gizmos.color = oldColor;
+
+        if (!showGrid)
+            return;
+
+        Gizmos.color = _normalColor;
+        GridGizmo(sizeColums, sizeRows, height);
+
     }
 
     public void UpdateInputGridHeight()

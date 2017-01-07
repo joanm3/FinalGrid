@@ -7,16 +7,17 @@ using UnityEditor;
 public class SnapToGridEditor : Editor
 {
     SnapToGrid m_myTarget;
-    bool m_instantiated = false;
-    private bool m_controlPressed = false;
-    private bool m_aPressed = false;
-    private bool m_shiftPressed = false;
-    private bool m_leftMousePressed = false;
     float distance;
     Vector3 gridPos = new Vector3();
     GameObject onMouseOverGameObject;
-    bool isThisObject = false;
-    bool isMouseDown = false;
+    bool m_instantiated = false;
+    static private bool m_controlPressed = false;
+    static private bool m_rotationKeyPressed = false;
+    static private bool m_shiftPressed = false;
+    static private bool m_leftMousePressed = false;
+    //private bool m_showGridKeyPressed = false; 
+    static bool isThisObject = false;
+    static bool isMouseDown = false;
 
     //GameObject m_instantiatedGameObject = new GameObject(); 
 
@@ -79,7 +80,7 @@ public class SnapToGridEditor : Editor
 
         LevelGrid.Ins.UpdateInputGridHeight();
 
-
+        //Debug.Log(onMouseOverGameObject == m_myTarget.gameObject);
         if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
         {
 
@@ -95,19 +96,23 @@ public class SnapToGridEditor : Editor
             {
                 isThisObject = false;
                 if (onMouseOverGameObject != null)
+                {
                     Selection.activeGameObject = onMouseOverGameObject;
+                }
                 else
+                {
+                    //SnapToGrid((int)col, (int)row, LevelGrid.Ins.height);
                     Selection.activeGameObject = null;
+                }
             }
-
 
         }
 
-
-        if (isMouseDown && m_aPressed)
+        if (isMouseDown && m_rotationKeyPressed)
         {
+            Debug.Log("entered here"); 
             LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
-            m_aPressed = false;
+            m_rotationKeyPressed = false;
         }
 
         //mouse click and dragandrop
@@ -115,10 +120,10 @@ public class SnapToGridEditor : Editor
         {
             if (Selection.activeGameObject == null)
                 return;
-            if (m_aPressed)
+            if (m_rotationKeyPressed)
             {
                 LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
-                m_aPressed = false;
+                m_rotationKeyPressed = false;
             }
             SnapToGrid((int)col, (int)row, LevelGrid.Ins.height);
         }
@@ -128,7 +133,6 @@ public class SnapToGridEditor : Editor
         //if mouse released when control pressed, make a copy / otherwise, destroy old object. 
         if (Event.current.type == EventType.MouseUp && Event.current.button == 0)
         {
-            m_instantiated = false;
             isMouseDown = false;
             if (LevelGrid.Ins.selectedGameObject)
             {
@@ -136,20 +140,27 @@ public class SnapToGridEditor : Editor
                 if (!m_controlPressed)
                 {
                     Undo.IncrementCurrentGroup();
-                    Undo.DestroyObjectImmediate(m_myTarget.gameObject);
+                    if (m_instantiated)
+                        Undo.DestroyObjectImmediate(m_myTarget.gameObject);
                 }
                 Selection.activeGameObject = LevelGrid.Ins.selectedGameObject;
+                m_instantiated = false;
             }
+        }
+
+        if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.I))
+        {
+            LevelGrid.Ins.showGrid = !LevelGrid.Ins.showGrid;
         }
     }
 
     private void UpdateKeyEvents()
     {
         if ((Event.current.type == EventType.keyDown) && (Event.current.keyCode == KeyCode.A || Event.current.keyCode == KeyCode.S))
-            m_aPressed = true;
+            m_rotationKeyPressed = true;
 
         if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.A || Event.current.keyCode == KeyCode.S))
-            m_aPressed = false;
+            m_rotationKeyPressed = false;
 
         //check if control is pressed. 
         if ((Event.current.type == EventType.keyDown) && (Event.current.keyCode == KeyCode.LeftControl || Event.current.keyCode == KeyCode.RightControl))
@@ -158,11 +169,11 @@ public class SnapToGridEditor : Editor
         if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.LeftControl || Event.current.keyCode == KeyCode.RightControl))
             m_controlPressed = false;
 
-        if ((Event.current.type == EventType.keyDown) && (Event.current.keyCode == KeyCode.LeftCommand || Event.current.keyCode == KeyCode.LeftApple))
-            m_shiftPressed = true;
+        //if ((Event.current.type == EventType.keyDown) && (Event.current.keyCode == KeyCode.I ))
+        //    m_showGridKeyPressed = true;
 
-        //if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.LeftShift || Event.current.keyCode == KeyCode.RightShift))
-        //    m_shiftPressed = false;
+        //if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.I ))
+        //    m_showGridKeyPressed = false;
 
 
     }

@@ -29,6 +29,8 @@ public class LevelGridWindow : EditorWindow
         EditorGUILayout.HelpBox("Y: move height up", MessageType.None);
         EditorGUILayout.HelpBox("U: move height down", MessageType.None);
         EditorGUILayout.HelpBox("A: rotate object 90º", MessageType.None);
+        EditorGUILayout.HelpBox("I: show/hide grid", MessageType.None);
+
         EditorGUILayout.HelpBox("Use Rectbox for better Usage. Rectbox shortcut: T", MessageType.Info); 
 
 
