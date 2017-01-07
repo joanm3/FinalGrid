@@ -68,7 +68,7 @@ public class SnapToGridEditor : Editor
             }
         }
 
-        if (hits.Length < 1)
+        if (hits.Length <= 0)
             onMouseOverGameObject = null;
 
         //Debug.Log(onMouseOverGameObject);
@@ -81,7 +81,7 @@ public class SnapToGridEditor : Editor
 
         LevelGrid.Ins.UpdateInputGridHeight();
 
-        //Debug.Log(onMouseOverGameObject == m_myTarget.gameObject);
+
         if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
         {
 
@@ -96,15 +96,7 @@ public class SnapToGridEditor : Editor
             else
             {
                 isThisObject = false;
-                if (onMouseOverGameObject != null)
-                {
-                    Selection.activeGameObject = onMouseOverGameObject;
-                }
-                else
-                {
-                    //SnapToGrid((int)col, (int)row, LevelGrid.Ins.height);
-                    Selection.activeGameObject = null;
-                }
+                Selection.activeGameObject = (onMouseOverGameObject != null) ? onMouseOverGameObject : null;
             }
 
         }
@@ -130,8 +122,6 @@ public class SnapToGridEditor : Editor
             SnapToGrid((int)col, (int)row, LevelGrid.Ins.height);
             objectDragged = true;
         }
-        ////Debug.Log(m_shiftPressed);
-        //Debug.Log("Event.current.keyCode: " + Event.current.keyCode);
 
         //if mouse released when control pressed, make a copy / otherwise, destroy old object. 
         if (Event.current.type == EventType.MouseUp && Event.current.button == 0)
@@ -155,6 +145,7 @@ public class SnapToGridEditor : Editor
             }
         }
 
+        //show hide grid
         if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.O))
         {
             LevelGrid.Ins.showGrid = !LevelGrid.Ins.showGrid;

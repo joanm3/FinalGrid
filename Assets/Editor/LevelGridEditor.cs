@@ -11,7 +11,7 @@ public class LevelGridEditor : Editor
     private void OnEnable()
     {
         _myTarget = target as LevelGrid;
-        _myTarget.boxCollider = _myTarget.GetComponent<BoxCollider>();
+        _myTarget.boxCollider =   _myTarget.GetComponent<BoxCollider>();
         SceneView.onSceneGUIDelegate += EventHandler;
     }
 
