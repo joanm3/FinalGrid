@@ -50,14 +50,8 @@ public class LevelGridEditor : Editor
         }
     }
 
-    [MenuItem("Level Grid/Show Level Grid Window")]
-    static public void OpenLevelGridWindow()
-    {
-        LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow));
-        window.Init();
-    }
-
-    [MenuItem("Level Grid/Add LevelGrid")]
+    [MenuItem("Level Grid/Create LevelGrid %g", false, 1)]
+    [MenuItem("GameObject/Level Grid", false, 6)]
     static public void AddLevelGrid()
     {
         if (LevelGrid.Ins == null)
@@ -71,6 +65,22 @@ public class LevelGridEditor : Editor
         }
     }
 
+    [MenuItem("Level Grid/Show Level Grid Window #g", false, 2)]
+    static public void OpenLevelGridWindow()
+    {
+        LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow));
+        window.Init();
+    }
 
+    [MenuItem("GameObject/3D Object/Snap To Grid GameObject")]
+    [MenuItem("Level Grid/Add SnapToGrid GameObject", false, 3)]
+    public static void CreateObject()
+    {
+        //GameObject gob = Instantiate(Resources.Load("Standard SnapToGrid", typeof(GameObject))) as GameObject;
+        //GameObject go = PrefabUtility.InstantiatePrefab(PrefabUtility.GetPrefabParent(Resources.Load("Standard SnapToGrid", typeof(GameObject)))) as GameObject;
+        GameObject go = PrefabUtility.InstantiatePrefab(Resources.Load("Standard SnapToGrid")) as GameObject; 
+        go.transform.position = Vector3.zero;
+        go.name = "SnapToGrid";
+    }
 
 }
