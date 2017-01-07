@@ -31,7 +31,7 @@ public class LevelGridEditor : Editor
         float rows = _myTarget.sizeRows;
 
         //properly place the collider
-        _myTarget.UpdateBoxCollider(_myTarget.boxCollider, cols, rows, _myTarget.height);
+       _myTarget.boxCollider = _myTarget.UpdateBoxCollider(_myTarget.boxCollider, cols, rows, _myTarget.height);
 
 
         LevelGrid.Ins.UpdateInputGridHeight();
@@ -68,7 +68,7 @@ public class LevelGridEditor : Editor
     [MenuItem("Level Grid/Show Level Grid Window #g", false, 2)]
     static public void OpenLevelGridWindow()
     {
-        LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow));
+        LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow), false, "Grid Editor");
         window.Init();
     }
 
