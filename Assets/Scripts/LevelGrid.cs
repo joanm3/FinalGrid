@@ -21,7 +21,7 @@ public class LevelGrid : MonoBehaviour
     public int heightIndex;
     [HideInInspector]
     public GameObject selectedGameObject;
-    public bool showVerticalGrid;
+    //public bool showVerticalGrid;
     public bool showGrid = true;
 
 
@@ -281,6 +281,7 @@ public class LevelGrid : MonoBehaviour
     }
 
     [MenuItem("GameObject/3D Object/Snap To Grid GameObject")]
+    [MenuItem("Level Grid/Add SnapToGrid GameObject")]
     public static void CreateObject()
     {
         GameObject go = Instantiate(Resources.Load("Standard SnapToGrid", typeof(GameObject))) as GameObject;

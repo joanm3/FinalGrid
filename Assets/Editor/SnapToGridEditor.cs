@@ -18,7 +18,7 @@ public class SnapToGridEditor : Editor
     //private bool m_showGridKeyPressed = false; 
     static bool isThisObject = false;
     static bool isMouseDown = false;
-
+    private bool objectDragged = false;
     //GameObject m_instantiatedGameObject = new GameObject(); 
 
     private void OnEnable()
@@ -56,6 +56,7 @@ public class SnapToGridEditor : Editor
         for (int i = 0; i < hits.Length; i++)
         {
 
+            //Debug.Log("hit:" + hits[i].collider.gameObject.name);
             if (hits[i].transform.gameObject.layer == LayerMask.NameToLayer("Grid"))
             {
                 gridPos = hits[i].point;
@@ -110,10 +111,11 @@ public class SnapToGridEditor : Editor
 
         if (isMouseDown && m_rotationKeyPressed)
         {
-            Debug.Log("entered here"); 
+            Debug.Log("entered here");
             LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
             m_rotationKeyPressed = false;
         }
+
 
         //mouse click and dragandrop
         if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
@@ -126,6 +128,7 @@ public class SnapToGridEditor : Editor
                 m_rotationKeyPressed = false;
             }
             SnapToGrid((int)col, (int)row, LevelGrid.Ins.height);
+            objectDragged = true;
         }
         ////Debug.Log(m_shiftPressed);
         //Debug.Log("Event.current.keyCode: " + Event.current.keyCode);
@@ -143,12 +146,16 @@ public class SnapToGridEditor : Editor
                     if (m_instantiated)
                         Undo.DestroyObjectImmediate(m_myTarget.gameObject);
                 }
-                Selection.activeGameObject = LevelGrid.Ins.selectedGameObject;
+                if (objectDragged)
+                {
+                    Selection.activeGameObject = LevelGrid.Ins.selectedGameObject;
+                    objectDragged = false;
+                }
                 m_instantiated = false;
             }
         }
 
-        if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.I))
+        if ((Event.current.type == EventType.keyUp) && (Event.current.keyCode == KeyCode.O))
         {
             LevelGrid.Ins.showGrid = !LevelGrid.Ins.showGrid;
         }

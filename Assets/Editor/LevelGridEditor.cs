@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
-using EditorSupport; 
+using EditorSupport;
 
 [CustomEditor(typeof(LevelGrid))]
 public class LevelGridEditor : Editor
@@ -31,7 +31,7 @@ public class LevelGridEditor : Editor
         float rows = _myTarget.sizeRows;
 
         //properly place the collider
-        _myTarget.UpdateBoxCollider(_myTarget.boxCollider, cols, rows, _myTarget.height); 
+        _myTarget.UpdateBoxCollider(_myTarget.boxCollider, cols, rows, _myTarget.height);
 
 
         LevelGrid.Ins.UpdateInputGridHeight();
@@ -50,11 +50,25 @@ public class LevelGridEditor : Editor
         }
     }
 
-    [MenuItem("Custom/Level Grid")]
+    [MenuItem("Level Grid/Show Level Grid Window")]
     static public void OpenLevelGridWindow()
     {
         LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow));
         window.Init();
+    }
+
+    [MenuItem("Level Grid/Add LevelGrid")]
+    static public void AddLevelGrid()
+    {
+        if (LevelGrid.Ins == null)
+        {
+            GameObject go = Instantiate(Resources.Load("LevelGrid", typeof(GameObject))) as GameObject;
+            go.transform.position = Vector3.zero;
+            LevelGrid.Ins = go.GetComponent<LevelGrid>();
+        } else
+        {
+            Debug.LogError("Already a LevelGrid Singleton in this scene");
+        }
     }
 
 

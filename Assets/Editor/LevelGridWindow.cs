@@ -28,10 +28,12 @@ public class LevelGridWindow : EditorWindow
         EditorGUILayout.HelpBox("Ctrl + move: copy", MessageType.None);
         EditorGUILayout.HelpBox("Y: move height up", MessageType.None);
         EditorGUILayout.HelpBox("U: move height down", MessageType.None);
+        EditorGUILayout.HelpBox("I: reset height to zero", MessageType.None);
+        EditorGUILayout.HelpBox("O: show / hide grid", MessageType.None);
         EditorGUILayout.HelpBox("A: rotate object 90º", MessageType.None);
-        EditorGUILayout.HelpBox("I: show/hide grid", MessageType.None);
 
-        EditorGUILayout.HelpBox("Use Rectbox for better Usage. Rectbox shortcut: T", MessageType.Info); 
+        EditorGUILayout.HelpBox("Use Rectbox for better Usage. Rectbox shortcut: T", MessageType.Info);
+        EditorGUILayout.HelpBox("Level Grid has to be in Layer with name 'Grid'", MessageType.Info);
 
 
         //m_levelGrid.Update(); 
