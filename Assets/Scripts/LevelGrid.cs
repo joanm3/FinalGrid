@@ -10,7 +10,7 @@ public class LevelGrid : MonoBehaviour
     //public GameObject testToGrid; 
     public static LevelGrid Ins;
 
-    // public bool hideUnityHandles = false;
+    public bool hideUnityHandles = false;
     public enum Pow2 { g0 = 0, g1 = 1, g2 = 2, g4 = 4, g8 = 8, g16 = 16, g32 = 32, g64 = 64, g128 = 128, g256 = 256, g512 = 512, g1024 = 1024, g2048 = 2048 }
     public bool snapToGrid = true;
     public Pow2 gridSize = Pow2.g128;
@@ -194,8 +194,9 @@ public class LevelGrid : MonoBehaviour
         Gizmos.DrawLine(new Vector3(-(cols * (float)gridSize * scaleFactor) / 2f, (float)height, (rows * (float)gridSize * scaleFactor) / 2f),
             new Vector3((cols * (float)gridSize * scaleFactor) / 2f, (float)height, (rows * (float)gridSize * scaleFactor) / 2f));
 
+        //Gizmos.color = Color.green;
 
-        //Gizmos.DrawLine(new Vector3((cols * (float)gridSize * scaleFactor) / 2f, (float)height, -(rows * (float)gridSize * scaleFactor) / 2f), new Vector3((cols * (float)gridSize * scaleFactor) / 2f, (float)height, (rows * (float)gridSize * scaleFactor) / 2f));
+        //Gizmos.DrawWireSphere(Vector3.zero, 0.5f); 
 
 
     }
@@ -210,6 +211,8 @@ public class LevelGrid : MonoBehaviour
 
         for (int i = (int)-(cols / 2f); i < cols/2f; i++)
         {
+            Gizmos.color = (i == 0) ? _selectedColor : _normalColor; 
+
             Gizmos.DrawLine(
                 new Vector3((i * ((float)gridSize) * scaleFactor), (float)height, -(rows * (float)gridSize * scaleFactor) / 2f),
                 new Vector3(i * (float)gridSize * scaleFactor, (float)height, (rows * (float)gridSize * scaleFactor) / 2f));
@@ -218,6 +221,7 @@ public class LevelGrid : MonoBehaviour
 
         for (int j = (int)(-rows / 2f); j < rows/2f; j++)
         {
+            Gizmos.color = (j == 0) ? _selectedColor : _normalColor;
 
             Gizmos.DrawLine(
                 new Vector3(-((cols * (float)gridSize * scaleFactor) / 2f), height, (j * (float)gridSize) * scaleFactor),

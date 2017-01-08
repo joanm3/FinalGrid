@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
-
+using EditorSupport;
 
 [CustomEditor(typeof(SnapToGrid))]
 public class SnapToGridEditor : Editor
@@ -20,6 +20,10 @@ public class SnapToGridEditor : Editor
     static bool isMouseDown = false;
     private bool objectDragged = false;
     //GameObject m_instantiatedGameObject = new GameObject(); 
+    private int rowDecal = 0;
+    private int colDecal = 0;
+    private int finalCol = 0;
+    private int finalRow = 0;
 
     private void OnEnable()
     {
@@ -38,12 +42,13 @@ public class SnapToGridEditor : Editor
         if (m_myTarget == null)
             m_myTarget = target as SnapToGrid;
 
+        ToolsSupport.UnityHandlesHidden = LevelGrid.Ins.hideUnityHandles;
 
-        if (m_myTarget.childToApplyBoxCollider != null)
+        if (m_myTarget.useChildBoxCollider != null)
         {
             BoxCollider _boxCollider = m_myTarget.GetComponent<BoxCollider>();
-            _boxCollider.size = m_myTarget.childToApplyBoxCollider.bounds.size;
-            _boxCollider.center = m_myTarget.childToApplyBoxCollider.bounds.center;
+            _boxCollider.size = m_myTarget.useChildBoxCollider.bounds.size;
+            _boxCollider.center = m_myTarget.useChildBoxCollider.bounds.center;
 
         }
 
@@ -76,6 +81,7 @@ public class SnapToGridEditor : Editor
         UpdateKeyEvents();
 
         //mouse position in the grid
+        //recalculate this with new values. 
         float col = (float)gridPos.x / ((float)LevelGrid.Ins.gridSize * LevelGrid.Ins.scaleFactor);
         float row = (float)gridPos.z / ((float)LevelGrid.Ins.gridSize * LevelGrid.Ins.scaleFactor);
 
@@ -103,7 +109,11 @@ public class SnapToGridEditor : Editor
 
         if (isMouseDown && m_rotationKeyPressed)
         {
+            if (LevelGrid.Ins.selectedGameObject == null)
+                LevelGrid.Ins.selectedGameObject = Selection.activeGameObject;
+
             LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
+            CalculateRotation(col, row); 
             m_rotationKeyPressed = false;
         }
 
@@ -113,12 +123,10 @@ public class SnapToGridEditor : Editor
         {
             if (Selection.activeGameObject == null)
                 return;
-            if (m_rotationKeyPressed)
-            {
-                LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
-                m_rotationKeyPressed = false;
-            }
-            SnapToGrid((int)col, (int)row, LevelGrid.Ins.height);
+
+            CalculateRotation(col, row); 
+            SnapToGrid(finalCol, finalRow, LevelGrid.Ins.height);
+
             objectDragged = true;
         }
 
@@ -173,6 +181,48 @@ public class SnapToGridEditor : Editor
         //    m_showGridKeyPressed = false;
 
 
+    }
+
+    private void CalculateRotation(float col, float row)
+    {
+        if (LevelGrid.Ins.selectedGameObject == null)
+            LevelGrid.Ins.selectedGameObject = Selection.activeGameObject;
+        //0
+        if (LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y > -2 && LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y < 2)
+        {
+            colDecal = 0;
+            rowDecal = 0;
+            finalCol = (Mathf.Sign(col) < 0) ? (int)col - 1 + colDecal : (int)col + colDecal;
+            finalRow = (Mathf.Sign(row) < 0) ? (int)row - 1 + rowDecal : (int)row + rowDecal;
+            SnapToGrid(finalCol, finalRow, LevelGrid.Ins.height);
+        }
+        //90
+        else if (LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y > 88 && LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y < 92)
+        {
+            colDecal = 0;
+            rowDecal = 1;
+            finalCol = (Mathf.Sign(col) < 0) ? (int)col - 1 + colDecal : (int)col + colDecal;
+            finalRow = (Mathf.Sign(row) < 0) ? (int)row - 1 + rowDecal : (int)row + rowDecal;
+            SnapToGrid(finalCol, finalRow, LevelGrid.Ins.height);
+        }
+        //180
+        else if (LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y > 178 && LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y < 182)
+        {
+            colDecal = 1;
+            rowDecal = 1;
+            finalCol = (Mathf.Sign(col) < 0) ? (int)col - 1 + colDecal : (int)col + colDecal;
+            finalRow = (Mathf.Sign(row) < 0) ? (int)row - 1 + rowDecal : (int)row + rowDecal;
+            SnapToGrid(finalCol, finalRow, LevelGrid.Ins.height);
+        }
+        //270
+        else if (LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y > 268 && LevelGrid.Ins.selectedGameObject.transform.eulerAngles.y < 272)
+        {
+            colDecal = 1;
+            rowDecal = 0;
+            finalCol = (Mathf.Sign(col) < 0) ? (int)col - 1 + colDecal : (int)col + colDecal;
+            finalRow = (Mathf.Sign(row) < 0) ? (int)row - 1 + rowDecal : (int)row + rowDecal;
+            SnapToGrid(finalCol, finalRow, LevelGrid.Ins.height);
+        }
     }
 
     private void SnapToGrid(int col, int row, float height)

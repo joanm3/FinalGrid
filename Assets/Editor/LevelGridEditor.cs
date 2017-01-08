@@ -25,6 +25,7 @@ public class LevelGridEditor : Editor
         if (!_myTarget)
             _myTarget = target as LevelGrid;
 
+        ToolsSupport.UnityHandlesHidden = LevelGrid.Ins.hideUnityHandles;
         _myTarget.transform.position = Vector3.zero;
 
         float cols = _myTarget.sizeColums;
@@ -32,10 +33,7 @@ public class LevelGridEditor : Editor
 
         //properly place the collider
        _myTarget.boxCollider = _myTarget.UpdateBoxCollider(_myTarget.boxCollider, cols, rows, _myTarget.height);
-
-
         LevelGrid.Ins.UpdateInputGridHeight();
-        //ToolsSupport.UnityHandlesHidden = _myTarget.hideUnityHandles; 
     }
 
 
@@ -50,7 +48,14 @@ public class LevelGridEditor : Editor
         }
     }
 
-    [MenuItem("Level Grid/Create LevelGrid %g", false, 1)]
+    [MenuItem("Level Grid/Show Level Grid Window %g", false, 1)]
+    static public void OpenLevelGridWindow()
+    {
+        LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow), false, "Grid Editor");
+        window.Init();
+    }
+
+    [MenuItem("Level Grid/Add LevelGrid %#g", false, 2)]
     [MenuItem("GameObject/Level Grid", false, 6)]
     static public void AddLevelGrid()
     {
@@ -63,13 +68,6 @@ public class LevelGridEditor : Editor
         {
             Debug.LogError("Already a LevelGrid Singleton in this scene");
         }
-    }
-
-    [MenuItem("Level Grid/Show Level Grid Window #g", false, 2)]
-    static public void OpenLevelGridWindow()
-    {
-        LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow), false, "Grid Editor");
-        window.Init();
     }
 
     [MenuItem("GameObject/3D Object/Snap To Grid GameObject")]
