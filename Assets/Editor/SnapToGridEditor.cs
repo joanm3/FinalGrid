@@ -42,7 +42,10 @@ public class SnapToGridEditor : Editor
         if (m_myTarget == null)
             m_myTarget = target as SnapToGrid;
 
+        //we should call this only when changing values, not always... but then again do it later. 
         ToolsSupport.UnityHandlesHidden = LevelGrid.Ins.hideUnityHandles;
+        if (!LevelGrid.Ins.hideUnityHandles && LevelGrid.Ins.autoRectTool)
+            Tools.current = Tool.Rect;
 
         if (m_myTarget.useChildBoxCollider != null)
         {
@@ -113,7 +116,7 @@ public class SnapToGridEditor : Editor
                 LevelGrid.Ins.selectedGameObject = Selection.activeGameObject;
 
             LevelGrid.Ins.selectedGameObject.transform.eulerAngles += new Vector3(0, 90f, 0);
-            CalculateRotation(col, row); 
+            CalculateRotation(col, row);
             m_rotationKeyPressed = false;
         }
 
@@ -124,7 +127,7 @@ public class SnapToGridEditor : Editor
             if (Selection.activeGameObject == null)
                 return;
 
-            CalculateRotation(col, row); 
+            CalculateRotation(col, row);
             SnapToGrid(finalCol, finalRow, LevelGrid.Ins.height);
 
             objectDragged = true;
@@ -232,10 +235,6 @@ public class SnapToGridEditor : Editor
 
         if (!LevelGrid.Ins.snapToGrid)
             return;
-
-        // Check out of bounds and if we have a piece selected
-        //if (!LevelGrid.Ins.IsInsideGridBounds(col, row))
-        //    return;
 
         GameObject obj = m_myTarget.gameObject;
         if (!m_instantiated)

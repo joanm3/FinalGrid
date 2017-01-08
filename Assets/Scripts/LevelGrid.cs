@@ -11,6 +11,7 @@ public class LevelGrid : MonoBehaviour
     public static LevelGrid Ins;
 
     public bool hideUnityHandles = false;
+    public bool autoRectTool = true; 
     public enum Pow2 { g0 = 0, g1 = 1, g2 = 2, g4 = 4, g8 = 8, g16 = 16, g32 = 32, g64 = 64, g128 = 128, g256 = 256, g512 = 512, g1024 = 1024, g2048 = 2048 }
     public bool snapToGrid = true;
     public Pow2 gridSize = Pow2.g128;

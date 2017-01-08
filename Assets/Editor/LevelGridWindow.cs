@@ -9,7 +9,11 @@ public class LevelGridWindow : EditorWindow
     SnapToGrid m_snapToGrid = null;
     static bool _showControls = true;
     static bool _selectionWithoutSnap = false;
-    static bool _noTransformSelected = false;
+    static bool _transformSelected = false;
+
+
+    private static Texture2D tex;
+
 
     public void Init()
     {
@@ -19,10 +23,11 @@ public class LevelGridWindow : EditorWindow
     private void OnEnable()
     {
         _selectionWithoutSnap = false;
+        tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        tex.SetPixel(0, 0, new Color(0.8f, 0.8f, 0.75f));
+        tex.Apply();
         SceneView.onSceneGUIDelegate += EventHandler;
     }
-
-
 
     private void OnDisable()
     {
@@ -31,20 +36,23 @@ public class LevelGridWindow : EditorWindow
 
     private void EventHandler(SceneView sceneview)
     {
-        _noTransformSelected = (Selection.activeTransform == null);
-
-        if (Selection.activeTransform != null)
-        {
-            if (Selection.activeTransform.gameObject == LevelGrid.Ins && Selection.activeTransform.gameObject.GetComponent<SnapToGrid>() == null)
-            {
-                _selectionWithoutSnap = true;
-
-            }
-        }
+        _transformSelected = (Selection.activeTransform != null);
 
         if (Selection.activeTransform != null)
         {
             m_snapToGrid = Selection.activeTransform.GetComponent<SnapToGrid>();
+        }
+
+        if (Selection.activeTransform != null)
+        {
+            if (Selection.activeTransform.gameObject != LevelGrid.Ins.gameObject && m_snapToGrid == null)
+            {
+                _selectionWithoutSnap = true;
+            }
+            else
+            {
+                _selectionWithoutSnap = false;
+            }
         }
 
         Repaint();
@@ -59,7 +67,10 @@ public class LevelGridWindow : EditorWindow
             Init();
         }
 
+        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), tex, ScaleMode.StretchToFill);
         GUIStyle MontStyle = new GUIStyle();
+
+        
 
         MontStyle.alignment = TextAnchor.MiddleCenter;
         MontStyle.font = (Font)Resources.Load("HomeRem");
@@ -70,9 +81,9 @@ public class LevelGridWindow : EditorWindow
         EditorGUILayout.LabelField("Grid Editor", MontStyle);
         EditorGUILayout.Space();
 
-        MontStyle.fontSize = 20;
+        MontStyle.fontSize = 24;
         MontStyle.alignment = TextAnchor.LowerLeft;
-        MontStyle.font = (Font)Resources.Load("MontserratAlternates-ExtraBold");
+        MontStyle.font = (Font)Resources.Load("CalligraphyFLF");
         EditorGUILayout.LabelField("Grid", MontStyle);
 
         if (LevelGrid.Ins == null)
@@ -89,10 +100,19 @@ public class LevelGridWindow : EditorWindow
         m_levelGrid.snapToGrid = EditorGUILayout.Toggle(m_levelGrid.snapToGrid);
         EditorGUILayout.LabelField("Snap to grid");
         EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(20f));
         LevelGrid.Ins.hideUnityHandles = EditorGUILayout.Toggle(LevelGrid.Ins.hideUnityHandles);
         EditorGUILayout.LabelField("Hide Unity Handles");
         EditorGUILayout.EndHorizontal();
+
+        if (!LevelGrid.Ins.hideUnityHandles)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(20f));
+            LevelGrid.Ins.autoRectTool = EditorGUILayout.Toggle(LevelGrid.Ins.autoRectTool);
+            EditorGUILayout.LabelField("Auto Rect Tool");
+            EditorGUILayout.EndHorizontal();
+        }
 
 
         EditorGUILayout.PrefixLabel("Grid Pow:");
@@ -102,7 +122,7 @@ public class LevelGridWindow : EditorWindow
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
-        if (!_noTransformSelected)
+        if (_transformSelected)
         {
             if (_selectionWithoutSnap)
             {
@@ -134,8 +154,8 @@ public class LevelGridWindow : EditorWindow
         }
 
         GUIStyle _foldout = EditorStyles.foldout;
-        _foldout.font = (Font)Resources.Load("MontserratAlternates-ExtraBold");
-        _foldout.fontSize = 20;
+        _foldout.font = (Font)Resources.Load("CalligraphyFLF");
+        _foldout.fontSize = 24;
         _showControls = EditorGUILayout.Foldout(_showControls, "Controls", _foldout);
         EditorGUILayout.Space();
         if (_showControls)
@@ -147,8 +167,15 @@ public class LevelGridWindow : EditorWindow
             EditorGUILayout.HelpBox("O: show / hide grid", MessageType.None);
             EditorGUILayout.HelpBox("A: rotate object 90º", MessageType.None);
         }
-        EditorGUILayout.HelpBox("Use Rectbox for better Usage. Rectbox shortcut: T", MessageType.Info);
-        EditorGUILayout.HelpBox("Level Grid has to be in Layer with name 'Grid'", MessageType.Info);
+
+
+        if (LevelGrid.Ins != null)
+        {
+            if (Tools.current != Tool.Rect)
+                EditorGUILayout.HelpBox("Use Rectbox for better Usage. Rectbox shortcut: T", MessageType.Info);
+            if (LevelGrid.Ins.gameObject.layer != LayerMask.NameToLayer("Grid"))
+                EditorGUILayout.HelpBox("Level Grid has to be in Layer with name 'Grid'", MessageType.Info);
+        }
 
 
         //m_levelGrid.Update(); 

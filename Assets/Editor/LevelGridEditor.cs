@@ -48,11 +48,14 @@ public class LevelGridEditor : Editor
         }
     }
 
+
     [MenuItem("Level Grid/Show Level Grid Window %g", false, 1)]
     static public void OpenLevelGridWindow()
     {
         LevelGridWindow window = (LevelGridWindow)EditorWindow.GetWindow(typeof(LevelGridWindow), false, "Grid Editor");
         window.Init();
+
+
     }
 
     [MenuItem("Level Grid/Add LevelGrid %#g", false, 2)]
